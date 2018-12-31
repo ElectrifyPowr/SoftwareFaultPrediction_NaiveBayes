@@ -6,13 +6,25 @@ SFPModel...
 
 
 <img src="https://latex.codecogs.com/svg.latex?\large&space;classify(f_1,..,f_n)&space;=&space;argmax\&space;p(C=c)&space;\prod_{i=1}^n&space;p(F_i=f_i|C=c)" title="\large classify(f_1,..,f_n) = argmax\ p(C=c) \prod_{i=1}^n p(F_i=f_i|C=c)" />
-Naive Bayes Classifier
+**Equation 1: Naive Bayes Classifier**
 
+<img src="https://latex.codecogs.com/svg.latex?\large&space;\sigma&space;=&space;\sqrt{\frac{\sum_{i=1}^{n}&space;(x_i&space;-&space;\overline{x})^2}&space;{n-1}}" title="\large \sigma = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \overline{x})^2} {n-1}}" />
+**Equation 2: Standard Deviation**
+
+<img src="https://latex.codecogs.com/svg.latex?\large&space;f_g(x)&space;=&space;\frac{1}{\sqrt{2\pi\sigma^2}}&space;\&space;exp(\frac{-(x-\overline{x})^2}{2\sigma^2})" title="\large f_g(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \ exp(\frac{-(x-\overline{x})^2}{2\sigma^2})" />
+**Equation 3: Gaussian Distribution Function**
+
+<img src="https://latex.codecogs.com/svg.latex?\large&space;\overline{x}&space;=&space;\frac{1}{n}&space;\sum_{i=1}^{n}&space;x_i" title="\large \overline{x} = \frac{1}{n} \sum_{i=1}^{n} x_i" />
+**Equation 4: Arithmetic Mean**
+
+<img src="https://latex.codecogs.com/svg.latex?\large&space;p(C=i)&space;=&space;\frac{n_i}{N}" title="\large p(C=i) = \frac{n_i}{N}" />
+**Equation 5: Category Specific Set Size**
 
 
 Run from command line:
-```javac model/SFPModel.java```
-```java -cp . module/SFPModel```
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ```javac model/SFPModel.java``` 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ```java -cp . module/SFPModel```
 
 
 ## Notes
