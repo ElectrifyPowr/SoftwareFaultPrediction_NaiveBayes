@@ -13,6 +13,7 @@ package model;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.LineNumberReader;
 import java.io.IOException;
 import java.io.BufferedReader;
 
@@ -23,10 +24,21 @@ public class SFPModel {
     final int CATEGORY_NON_FAULTY = 0;
     final int CATEGORY_FAULTY = 0;
 
+    final int SET_TYPE_DATASET = 0;
+    final int SET_TYPE_TESTSET = 1;
+
     double[][] dataset;
-    int noOfFeatures = 21;
-    int noOfModules = 496;
-    String nameDataset = "dataset.txt";
+    
+    // dataset of NASA CM1
+    //int noOfFeatures = 21;
+    //int noOfModules = 496;
+    
+    // custom test dataset
+    int noOfFeatures = 3;
+    int noOfTrainingModules = 5;
+    int noOfTestingModules = 0;
+    String filenameDataset = "dataset.txt";
+    String filenameUnknownModules = "unknown.txt";
     String path = "./";
 
     double[][] faultyData;
@@ -34,28 +46,43 @@ public class SFPModel {
 
     private static final String COMMA_DELIMITER = ",";
 
-    double[][] testSet = new double[][]{
+    /*double[][] testSet = new double[][]{
         {12,3,1,1,51,227.43,0.1,10.42,21.83,2369.07,0.08,131.62,0,0,1,0,10,12,26,25,5,0},
         {31,4,1,2,141,829.45,0.05,21.52,38.55,17846.19,0.28,991.46,1,19,15,0,27,32,90,51,7,1},
         {28,6,5,5,104,564.33,0.06,16.09,35.08,9078.38,0.19,504.35,2,7,0,0,20,23,67,37,11,1}
-    };
+    };*/
+
+    double[][] testSet;
     
     public static void main(String[] args) {
         SFPModel model = new SFPModel();
+        model.start();
+    }
 
-        model.loadDataset();
-        model.separateDataset();
+    public void start(){
+        //int dsCount = getNumberOfLinesInFile(nameDataset);
+        //int testCount = getNumberOfLinesInFile(nameUnknownModules);
+        //System.out.println("dsCount: "+dsCount+", testCount: "+testCount);
 
-        model.makePredictions();
+        //load training data
+        loadDataset();
+        separateDataset();
+
+        // load test data
+        loadUnknownModules();
+
+        System.out.println("noOfFeatures: "+noOfFeatures+", noOfTrainingModules: "+noOfTrainingModules+", noOfTestingModules: "+noOfTestingModules);
+
+        makePredictions();
     }
 
     public void makePredictions(){
         System.out.println("Starting prediction...");
         
         for(int set=0; set<testSet.length; set++){
-            System.out.println("---------------------------------- "+set+" ----------------------------------");
+            System.out.println("---------------------------------- Module: "+set+" ----------------------------------");
             naiveBayesClassifier(testSet[set]);
-            System.out.println("-----------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------");
         }
 
     }
@@ -72,7 +99,7 @@ public class SFPModel {
             double mean = nonFaultyFeatureData[feature][0];
             double stdDev = nonFaultyFeatureData[feature][1];
             double gaussDistr = calcGaussDistribution(x, mean, stdDev);
-            String s = ("NBC - nonFaultyTmp calc - x="+x+", mean="+mean+", stdDev="+stdDev+", gauss="+gaussDistr+", oldTmp="+nonFaultTmp);
+            String s = ("NaiveBayesClassifier - nonFaultyTmp calc - x="+x+", mean="+mean+", stdDev="+stdDev+", gauss="+gaussDistr+", oldTmp="+nonFaultTmp);
             nonFaultTmp *= gaussDistr;
             System.out.println(""+s+", newTmp="+nonFaultTmp);
         }
@@ -85,7 +112,7 @@ public class SFPModel {
             double mean = faultyFeatureData[feature][0];
             double stdDev = faultyFeatureData[feature][1];
             double gaussDistr = calcGaussDistribution(x, mean, stdDev);
-            String s = ("NBC - faultyTmp calc - x="+x+", mean="+mean+", stdDev="+stdDev+", gauss="+gaussDistr+", oldTmp="+faultTmp);
+            String s = ("NaiveBayesClassifier - faultyTmp calc - x="+x+", mean="+mean+", stdDev="+stdDev+", gauss="+gaussDistr+", oldTmp="+faultTmp);
             faultTmp *= gaussDistr;
             System.out.println(""+s+", newTmp="+faultTmp);
         }
@@ -221,16 +248,17 @@ public class SFPModel {
      * @return
      */
     public void loadDataset(){
+        processLinesAndFeaturesOfFile(filenameDataset, SET_TYPE_DATASET);
         BufferedReader fileReader = null;
         try {
             String line = "";
-            fileReader = new BufferedReader(new FileReader(new File(path, nameDataset)));
+            fileReader = new BufferedReader(new FileReader(new File(path, filenameDataset)));
 
-            dataset = new double[noOfModules][noOfFeatures+1];
+            dataset = new double[noOfTrainingModules][noOfFeatures+1];
 
             int y=0;
             while ((line = fileReader.readLine()) != null) {
-                String [] tokens = line.split(COMMA_DELIMITER);
+                String[] tokens = line.split(COMMA_DELIMITER);
                 //+1 due to defective class
                 for (int x = 0; x < (noOfFeatures + 1); x++) {
                     dataset[y][x] = Double.parseDouble(tokens[x]);
@@ -239,6 +267,75 @@ public class SFPModel {
             }
         } catch (Exception e) {
             System.out.println("Error in CsvFileReader !!!");
+            e.printStackTrace();
+        } finally {
+            try {
+                fileReader.close();
+            } catch (IOException e) {
+                System.out.println("Error while closing fileReader !!!");
+                e.printStackTrace();
+            }
+         }
+    }
+    
+    /**
+     * converts information from a csv file into a 2d dataset array
+     * @return
+     */
+    public void loadUnknownModules(){
+        processLinesAndFeaturesOfFile(filenameUnknownModules, SET_TYPE_TESTSET);
+
+        BufferedReader fileReader = null;
+        try {
+            String line = "";
+            fileReader = new BufferedReader(new FileReader(new File(path, filenameUnknownModules)));
+
+            testSet = new double[noOfTestingModules][noOfFeatures+1];
+
+            int y=0;
+            while ((line = fileReader.readLine()) != null) {
+                String[] tokens = line.split(COMMA_DELIMITER);
+                //+1 due to defective class
+                for (int x = 0; x < (noOfFeatures + 1); x++) {
+                    testSet[y][x] = Double.parseDouble(tokens[x]);
+                }
+                y++;
+            }
+        } catch (Exception e) {
+            System.out.println("Error in CsvFileReader !!!");
+            e.printStackTrace();
+        } finally {
+            try {
+                fileReader.close();
+            } catch (IOException e) {
+                System.out.println("Error while closing fileReader !!!");
+                e.printStackTrace();
+            }
+         }
+    }
+
+    private void processLinesAndFeaturesOfFile(String filename, int type){
+        BufferedReader fileReader = null;
+        try {
+            String line = "";
+            fileReader = new BufferedReader(new FileReader(new File(path, filename)));
+
+            int lineCnt=0;
+            while ((line = fileReader.readLine()) != null) {
+                if(lineCnt==0 && type == SET_TYPE_DATASET){
+                    String[] tokens = line.split(COMMA_DELIMITER);
+                    noOfFeatures = tokens.length-1;
+                }
+                lineCnt++;
+            }
+
+            if(type==SET_TYPE_DATASET)
+                noOfTrainingModules = lineCnt;
+            else if(type==SET_TYPE_TESTSET)
+                noOfTestingModules = lineCnt;
+
+        } catch (Exception e){
+            System.out.println("Error getting number of lines!!!");
             e.printStackTrace();
         } finally {
             try {
