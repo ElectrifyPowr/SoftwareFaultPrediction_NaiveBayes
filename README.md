@@ -1,11 +1,13 @@
 # Software Fault Prediction with Naive Bayes
 ## To make your test phase more efficient
 
-This a basic Software Fault Prediction (SFP) program in <b>Java</b>.<br>
+This is a basic Software Fault Prediction (SFP) program, written in <b>Java</b>.<br>
 It uses a <b>Naive Bayes Classifier</b> for predicting software faults.<br>
 
 A custom, rather small dataset is used (<b>dataset.txt</b>).<br>
 The structure is as follows:<br>
+Please note that the <b>'module' column is not part of the dataset</b>, it is just shown to make it easier to understand.
+<br>
 
 module | f1 | f2 | ... | fn | Faulty
 ------------- | ------------ | ------------- | ------------- | ------------- | -------------
@@ -24,7 +26,7 @@ Where<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>k is total number of modules in dataset (total number of lines)</i>
 <br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>A module can either be faulty (=1) or non-faulty (=0)</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>A module can either be <b>faulty (=1)</b> or <b>non-faulty (=0)</b></i>
 <br><br>
 
 The used equations can be seen below.<br><br>

@@ -107,6 +107,8 @@ public class SFPModel {
 
     /**
      * Use Naive Bayes Classifier to make prediction on a testing module.
+     * 
+     * Implementation of Equation 1 (which can be found in README.md file)
      *
      * @param moduleUnderTest - holds all features of a module that should be predicted
      *
@@ -233,6 +235,8 @@ public class SFPModel {
     /**
      * Calculates Gauss Distribution Function.
      *
+     * Implementation of Equation 3 (which can be found in README.md file)
+     *
      * @param x - value of feature
      * @param mean - mean of all values of certain feature of training dataset
      * @param stDev - standard deviation of all values of certain feature of training dataset
@@ -246,7 +250,9 @@ public class SFPModel {
     }
 
     /**
-     * Calculates standard deviation of one feature of dataset
+     * Calculates standard deviation of one feature of dataset.
+     *
+     * Implementation of Equation 2 (which can be found in README.md file)
      *
      * @param data - the dataset
      * @param mean - mean of all values of certain feature of training dataset 'data'
@@ -270,7 +276,9 @@ public class SFPModel {
     }
 
     /**
-     * Get the category specific set size
+     * Get the category specific set size.
+     *
+     * Implementation of Equation 5 (which can be found in README.md file)
      *
      * @param category - based on this, the set size should be returned
      *
@@ -316,7 +324,9 @@ public class SFPModel {
     }
 
     /**
-     * Calculates the arithmetic mean of a certain feature in dataset 'data'
+     * Calculates the arithmetic mean of a certain feature in dataset 'data'.
+     *
+     * Implementation of Equation 4 (which can be found in README.md file)
      *
      * @param data - dataset
      * @param feature
@@ -336,7 +346,9 @@ public class SFPModel {
     }
 
     /**
-     * Calculates the maximum value of a given array and returns its index of the array
+     * Calculates the maximum value of a given array and returns its index of the array.
+     *
+     * Part of Equation 1 (which can be found in README.md file)
      *
      * @param vals - data array
      *
