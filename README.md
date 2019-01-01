@@ -14,8 +14,8 @@ module | f1 | f2 | ... | fn | Faulty
 ... | ... | ... | ... | ... | 0 or 1
 k | mk\_f1 | mk\_f2 | ... | mk\_fn | 0 or 1
 
-<br><br>
-Where 
+<br>
+Where<br> 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>f1 stands for feature 1, f2 = feature 2, ...</i>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>m1\_f1 stands for first feature of first module</i>
